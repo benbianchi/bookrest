@@ -1,0 +1,3 @@
+aerospikeConfiguration:
+  host: localhost
+  port: 3100

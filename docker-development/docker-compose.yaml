@@ -1,0 +1,8 @@
+services:
+  aerospikedb:
+    image: aerospike/aerospike-server:3.14.1.1
+    networks:
+    - aerospikenetwork
+    deploy:
+      replicas: 2
+      endpoint_mode: dnsrr
