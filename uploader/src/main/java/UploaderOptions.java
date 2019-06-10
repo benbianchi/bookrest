@@ -1,5 +1,8 @@
 import org.apache.commons.cli.Options;
 
+/**
+ * Options used for our Uploader's CLI arguments
+ */
 public class UploaderOptions {
 
     static final String ASSET_FILE_TO_LOAD = "Asset File to load";

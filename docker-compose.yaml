@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  # uploader:
+  #   depends_on: 
+  #     - aerospike
+  #   ports:
+  #     - 8080:8080
+  #   build:
+  #     context: ./
+  #     dockerfile: uploader/docker/Dockerfile
+  #   links:
+  #     - aerospike:aerospike
+
+  aerospike:
+    image: aerospike/aerospike-server:4.5.2.2
+    deploy:
+      replicas: 1
+    environment:
+      NAMESPACE: demo
+
+  # rest:
+  #   depends_on:
+  #     - uploader
+  #   ports:
+  #     - "8080:8080"
+  #   build:
+  #     context: ./
+  #     dockerfile: rest/docker/Dockerfile

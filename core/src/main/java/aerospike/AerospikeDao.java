@@ -5,9 +5,8 @@ import com.aerospike.client.Bin;
 import com.aerospike.client.IAerospikeClient;
 import com.aerospike.client.Key;
 import com.aerospike.client.Record;
+import com.aerospike.client.ResultCode;
 import com.aerospike.client.policy.WritePolicy;
-
-import javax.xml.transform.Result;
 
 /**
  * This class is used to write and read lines of text from an aerospike cluster.
@@ -79,6 +78,13 @@ public class AerospikeDao {
     public String getLine(int lineNumber) throws AerospikeException {
         try {
             Record r = this.client.get(policy, generateKeyFromLineNumber(lineNumber));
+
+            // If I had more time, I would persist the information about the asset
+            // In another table.
+            if (r == null) {
+                throw new AerospikeException(ResultCode.KEY_NOT_FOUND_ERROR);
+            }
+
             return r.getString(BIN_TEXT_NAME);
         } catch (AerospikeException ex) {
             throw ex;

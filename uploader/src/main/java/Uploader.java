@@ -5,6 +5,8 @@ import com.aerospike.client.IAerospikeClient;
 import com.aerospike.client.policy.RecordExistsAction;
 import com.aerospike.client.policy.WritePolicy;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -15,6 +17,7 @@ import org.apache.commons.cli.ParseException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.Scanner;
 
 public class Uploader {
@@ -37,12 +40,17 @@ public class Uploader {
     /**
      * Object Mapper we will use to deserialize a configuration
      */
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
     /**
      * The configuration we use for uploading.
      */
     private static UploaderConfiguration configuration;
+
+    /**
+     * Aerospike client used to seed the db with information
+     */
+    IAerospikeClient aerospikeClient;
 
     /**
      * Main Entry for our uploader program.
@@ -79,13 +87,19 @@ public class Uploader {
         System.out.println("Beginning Uploading Process.");
         File assetFile = new File(cmd.getOptionValue('f'));
 
-        UploaderConfiguration configuration = null;
 
-        IAerospikeClient aerospikeClient = new AerospikeClient(
+        IAerospikeClient aerospikeClient = null;
+
+        try {
+        aerospikeClient = new AerospikeClient(
                 configuration.getAerospikeConfiguration().getHost(),
                 configuration.getAerospikeConfiguration().getPort()
         );
-
+        } catch (AerospikeException ex) {
+            System.err.println("Unable to connect to Aerospike!");
+            ex.printStackTrace();
+            System.exit(APPLICATION_FAILURE_CODE);
+        }
 
         // Build an aerospike client and dao, We should not overwrite anything.
         RecordExistsAction recordExistsAction = RecordExistsAction.CREATE_ONLY;
@@ -116,6 +130,6 @@ public class Uploader {
             e.printStackTrace();
             System.exit(APPLICATION_FAILURE_CODE);
         }
+        System.out.println("Ding. Done uploading.");
     }
-
 }

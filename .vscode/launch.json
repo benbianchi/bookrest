@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch)",
+            "request": "launch",
+            "mainClass": ""
+        },
+        {
+            "type": "java",
+            "name": "Uploader",
+            "request": "launch",
+            "mainClass": "Uploader",
+            "projectName": "uploader",
+            "args": "-c ${workspaceFolder}/config/local/config.yaml -f ${workspaceFolder}/uploader/src/main/resources/letters-from-a-stoic.txt"
+            
+        },
+        {
+            "type": "java",
+            "name": "Rest",
+            "request": "launch",
+            "mainClass": "bookrest.BookRestService",
+            "projectName": "rest",
+            "args": "server ${workspaceFolder}/config/local/config.yaml"
+        }
+    ]
+}
